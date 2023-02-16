@@ -1,0 +1,19 @@
+name: Devpass checks
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_14.1.app && /usr/bin/xcodebuild -version
+
+      - name: Run Unit Tests
+        run: xcodebuild test -scheme GitHubApp -project GitHubApp.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.1' | xcpretty && exit ${PIPESTATUS[0]}
